@@ -1,0 +1,22 @@
+behaviors:
+  ShooterBrain:
+    trainer_type: ppo
+    time_horizon: 128 
+    max_steps: 1000000 
+    hyperparameters:
+      learning_rate: 3.0e-4 
+      batch_size: 2048 
+      buffer_size: 20480 
+      num_epoch: 3 
+    network_settings:
+      normalize: true
+      num_layers: 2 
+      hidden_units: 128 
+    reward_signals:
+      extrinsic:
+        gamma: 0.99 
+        strength: 1.0
+    summary_freq: 50000
+    threaded: true
+torch_settings:
+  device: cpu
