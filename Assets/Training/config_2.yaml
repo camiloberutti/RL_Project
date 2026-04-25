@@ -1,0 +1,29 @@
+behaviors:
+  ShooterBrain:
+    trainer_type: ppo
+    time_horizon: 64        
+    max_steps: 20000000       
+    summary_freq: 25000      
+
+    hyperparameters:
+      learning_rate: 1.0e-4
+      batch_size: 512        #
+      buffer_size: 5120      # Keep 10x ratio with batch_size
+      beta: 5.0e-3            # HIGHER entropy bonus — forces exploration of pitch/yaw/force combos
+      epsilon: 0.15
+      lambd: 0.90
+      num_epoch: 4           
+      learning_rate_schedule: linear
+
+    network_settings:
+      normalize: true         
+      hidden_units: 256       
+      num_layers: 3           
+
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+
+torch_settings:
+  device: cuda
