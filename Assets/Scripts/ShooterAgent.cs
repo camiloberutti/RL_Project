@@ -5,42 +5,54 @@ using UnityEngine;
 
 public class ShooterAgent : Agent
 {
-    [Header("Prefabs")]
+    [Header("Prefabs and Environment")]
     public GameObject birdPrefab;
-    // ¡Adiós al pyramidPrefab! Ya no lo necesitamos.
+    [Tooltip("The master container that moves the table and pyramid together.")]
+    public Transform targetZone;
+    [Tooltip("The parent object that contains all the targets (pigs/cans).")]
+    public Transform pyramidParent;
 
-    [Header("Environment Setup")]
-    public Transform pyramidParent; // El objeto padre que contiene a todos tus cerdos/latas
-
-    [Header("Launcher Parts")]
+    [Header("Cannon Components")]
     public Transform launcherBase;
     public Transform launcherBarrel;
     public Transform launchPoint;
 
-    [Header("Shooting Stats")]
+    [Header("Shooting Physics")]
     public float maxForce = 30f;
-    public float rotationSpeed = 500f;
+    public float rotationSpeed = 200f;
+    [Tooltip("Time the AI waits to see the result of its shot before resetting.")]
+    public float timeToWaitAfterShot = 3.0f;
 
-    [Header("Limites de Rotacion")]
-    public float maxYaw = 30f;    // Cuánto puede girar a izquierda/derecha
-    public float maxPitch = 11f;  // Cuánto puede apuntar hacia arriba
-    public float minPitch = -89f; // Cuánto puede apuntar hacia abajo
+    [Header("Rotation Limits")]
+    public float maxYaw = 50f;
+    public float maxPitch = 11f;
+    public float minPitch = -50f;
 
+    [Header("Random Spawn Area")]
+    public Vector2 spawnRangeX = new Vector2(-10.0f, 10.0f);
+    public Vector2 spawnRangeZ = new Vector2(3.0f, 20.0f);
+
+    [Header("Triggers and Reward System")]
+    public RewardTrigger floorTrigger;
+
+    // --- Internal State Variables ---
     private float currentYaw = 0f;
     private float currentPitch = 0f;
     private bool hasFired = false;
     private float waitTimer = 0f;
-    private float timeToWaitAfterShot = 3.0f;
     private GameObject currentBird;
-    [Header("Triggers")]
-    public RewardTrigger floorTrigger;
-    // --- NUEVAS VARIABLES PARA MEMORIZAR LA PIRÁMIDE ---
+    private float humanPower = 0.5f;
+
+    // --- Pyramid Memory Cache ---
     private Transform[] cans;
     private Vector3[] startPositions;
     private Quaternion[] startRotations;
     private Rigidbody[] canRigidbodies;
 
-    // Initialize se ejecuta solo UNA vez cuando le das a Play
+
+    // ==========================================
+    // 1. INITIALIZATION (Executed only once)
+    // ==========================================
     public override void Initialize()
     {
         int canCount = pyramidParent.childCount;
@@ -49,62 +61,92 @@ public class ShooterAgent : Agent
         startRotations = new Quaternion[canCount];
         canRigidbodies = new Rigidbody[canCount];
 
-        // Guardamos la posición exacta, rotación y físicas de cada cerdo individual
         for (int i = 0; i < canCount; i++)
         {
             cans[i] = pyramidParent.GetChild(i);
-            startPositions[i] = cans[i].localPosition; // Local, para que funcione al duplicar entornos
+            startPositions[i] = cans[i].localPosition;
             startRotations[i] = cans[i].localRotation;
             canRigidbodies[i] = cans[i].GetComponent<Rigidbody>();
         }
     }
 
+
+    // ==========================================
+    // 2. EPISODE RESET
+    // ==========================================
     public override void OnEpisodeBegin()
     {
-        // 1. Limpiar el pájaro viejo
+        // Clean up the previous projectile
         if (currentBird != null)
         {
             Destroy(currentBird);
         }
 
-        // 2. Restaurar cada cerdo
+        // Move the pyramid to a random position within the spawn area
+        float randomX = Random.Range(spawnRangeX.x, spawnRangeX.y);
+        float randomZ = Random.Range(spawnRangeZ.x, spawnRangeZ.y);
+        targetZone.localPosition = new Vector3(randomX, targetZone.localPosition.y, randomZ);
+
+        // Restore each pig to its original state
         for (int i = 0; i < cans.Length; i++)
         {
-            // Volver a la posición original
             cans[i].localPosition = startPositions[i];
             cans[i].localRotation = startRotations[i];
 
-            // Frenar cualquier movimiento que tuvieran al caer
             if (canRigidbodies[i] != null)
             {
                 canRigidbodies[i].velocity = Vector3.zero;
                 canRigidbodies[i].angularVelocity = Vector3.zero;
             }
 
-            // ¡LA SOLUCIÓN! -> Volver a encender su cuerpo físico (Collider)
             Collider canCollider = cans[i].GetComponent<Collider>();
             if (canCollider != null)
             {
                 canCollider.enabled = true;
             }
 
-            // Por si acaso algún otro script apagó el objeto entero
             cans[i].gameObject.SetActive(true);
         }
 
-        // 3. Resetear el cañón
+        // Reset cannon rotation
         launcherBase.localRotation = Quaternion.identity;
         launcherBarrel.localRotation = Quaternion.identity;
+        currentYaw = 0f;
+        currentPitch = 0f;
 
-        // Resetear tu trigger del piso (si conectaste la variable)
+        // Reset trigger
         if (floorTrigger != null)
         {
             floorTrigger.ResetTrigger();
         }
 
+        // Reset state variables
         hasFired = false;
         waitTimer = 0f;
     }
+
+
+    // ==========================================
+    // 3. OBSERVATIONS
+    // ==========================================
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        // Cannon orientation (normalized)
+        sensor.AddObservation(currentYaw / maxYaw);         // [-1, 1]
+        sensor.AddObservation(currentPitch / maxPitch);     // [-1, 1]
+
+        // Target relative position — gives the agent persistent spatial awareness
+        Vector3 toTarget = targetZone.position - launchPoint.position;
+        sensor.AddObservation(toTarget.normalized);         // 3 floats: direction
+        sensor.AddObservation(toTarget.magnitude / 70f);    // 1 float: normalized distance
+
+        // Total: 6 observations — set Vector Observations > Space Size to 6 in Inspector
+    }
+
+
+    // ==========================================
+    // 4. ACTIONS
+    // ==========================================
     public override void OnActionReceived(ActionBuffers actions)
     {
         if (hasFired) return;
@@ -113,23 +155,23 @@ public class ShooterAgent : Agent
         float pitchInput = actions.ContinuousActions[1];
         float forceInput = actions.ContinuousActions[2];
 
-        // 1. Calculamos el nuevo ángulo (Izquierda/Derecha) y le ponemos el límite
+        // Apply yaw (left/right)
         currentYaw += yawInput * rotationSpeed * Time.fixedDeltaTime;
         currentYaw = Mathf.Clamp(currentYaw, -maxYaw, maxYaw);
-        // Aplicamos el ángulo exacto a la base
         launcherBase.localRotation = Quaternion.Euler(0f, currentYaw, 0f);
 
-        // 2. Calculamos el nuevo ángulo (Arriba/Abajo) y le ponemos el límite
+        // Apply pitch (up/down)
         currentPitch += pitchInput * rotationSpeed * Time.fixedDeltaTime;
         currentPitch = Mathf.Clamp(currentPitch, minPitch, maxPitch);
-        // Aplicamos el ángulo exacto al cañón
         launcherBarrel.localRotation = Quaternion.Euler(currentPitch, 0f, 0f);
 
+        // Fire threshold
         if (forceInput > 0.5f)
         {
             Shoot(forceInput);
         }
 
+        // Small per-step penalty to encourage quick, decisive shots
         AddReward(-0.001f);
     }
 
@@ -141,12 +183,14 @@ public class ShooterAgent : Agent
         currentBird = Instantiate(birdPrefab, launchPoint.position, launchPoint.rotation);
         Rigidbody birdRb = currentBird.GetComponent<Rigidbody>();
 
+        // Map force from [0.5, 1.0] to [0, maxForce]
         float actualForce = (normalizedForce - 0.5f) * 2f * maxForce;
         birdRb.AddForce(launchPoint.forward * actualForce, ForceMode.Impulse);
     }
 
     private void FixedUpdate()
     {
+        // Count down after firing and end episode if timer expires
         if (hasFired)
         {
             waitTimer -= Time.fixedDeltaTime;
@@ -157,9 +201,10 @@ public class ShooterAgent : Agent
         }
     }
 
-    // --- CONTROLES MANUALES ---
-    private float humanPower = 0.5f;
 
+    // ==========================================
+    // 5. MANUAL CONTROLS (Testing / Heuristic)
+    // ==========================================
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var continuousActions = actionsOut.ContinuousActions;
@@ -169,13 +214,12 @@ public class ShooterAgent : Agent
 
         if (Input.GetKey(KeyCode.LeftShift)) humanPower += Time.deltaTime;
         if (Input.GetKey(KeyCode.LeftControl)) humanPower -= Time.deltaTime;
-
         humanPower = Mathf.Clamp(humanPower, 0.5f, 1.0f);
 
         if (Input.GetKey(KeyCode.Space))
         {
             continuousActions[2] = humanPower;
-            Debug.Log("Firing! Power: " + humanPower);
+            Debug.Log($"Firing! Power: {humanPower}");
         }
         else
         {
@@ -183,15 +227,26 @@ public class ShooterAgent : Agent
         }
     }
 
-    // FOR THE AGENT
 
-    public override void CollectObservations(VectorSensor sensor)
+    // ==========================================
+    // 6. EDITOR GIZMOS
+    // ==========================================
+    private void OnDrawGizmosSelected()
     {
-        // Tell the AI exactly where the barrel is currently pointing
-        sensor.AddObservation(currentYaw);
-        sensor.AddObservation(currentPitch);
+        Gizmos.color = Color.green;
+
+        float centerX = (spawnRangeX.x + spawnRangeX.y) / 2f;
+        float centerZ = (spawnRangeZ.x + spawnRangeZ.y) / 2f;
+        float tableHeight = targetZone != null ? targetZone.localPosition.y : 0f;
+
+        Vector3 center = new Vector3(centerX, tableHeight, centerZ);
+        Vector3 size = new Vector3(spawnRangeX.y - spawnRangeX.x, 0.1f, spawnRangeZ.y - spawnRangeZ.x);
+
+        if (transform.parent != null)
+        {
+            Gizmos.matrix = transform.parent.localToWorldMatrix;
+        }
+
+        Gizmos.DrawWireCube(center, size);
     }
-
-
-
 }

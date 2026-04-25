@@ -3,29 +3,37 @@ using UnityEngine;
 public class RewardTrigger : MonoBehaviour
 {
     public ShooterAgent myAgent;
+
     private int cansFallen = 0;
 
     void OnTriggerEnter(Collider other)
     {
+        // --- A pig/can fell into the trigger zone ---
         if (other.CompareTag("Target"))
         {
-            // 1. Give the AI its dopamine hit
             myAgent.AddReward(0.2f);
             cansFallen++;
 
-            // 2. Disable the can's collider so it doesn't double-count if it bounces!
+            // Disable collider to prevent double-counting on bounces
             other.enabled = false;
 
-            // 3. If all 6 cans fall...
+            // All 6 pigs cleared — bonus reward and early episode end
             if (cansFallen >= 6)
             {
                 myAgent.AddReward(1.0f);
                 myAgent.EndEpisode();
             }
         }
+
+        // --- The bird itself hit the floor (clean miss) ---
+        if (other.CompareTag("Bird"))
+        {
+            myAgent.AddReward(-0.3f);  // Penalize missing entirely
+            myAgent.EndEpisode();      // Don't waste 3 seconds on a confirmed miss
+        }
     }
 
-    // Instead of FixedUpdate, let's make a public function the Agent can call
+    // Called by ShooterAgent on each episode reset
     public void ResetTrigger()
     {
         cansFallen = 0;

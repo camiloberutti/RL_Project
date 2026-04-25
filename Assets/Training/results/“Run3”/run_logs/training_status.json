@@ -1,0 +1,47 @@
+{
+    "ShooterBrain": {
+        "checkpoints": [
+            {
+                "steps": 499973,
+                "file_path": "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-499973.onnx",
+                "reward": -0.01904824698699246,
+                "creation_time": 1777119584.9340034,
+                "auxillary_file_paths": [
+                    "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-499973.pt"
+                ]
+            },
+            {
+                "steps": 999987,
+                "file_path": "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-999987.onnx",
+                "reward": -0.04193283860752387,
+                "creation_time": 1777121204.4060314,
+                "auxillary_file_paths": [
+                    "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-999987.pt"
+                ]
+            },
+            {
+                "steps": 1008785,
+                "file_path": "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-1008785.onnx",
+                "reward": -0.03980952611946989,
+                "creation_time": 1777121299.975446,
+                "auxillary_file_paths": [
+                    "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-1008785.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 1008785,
+            "file_path": "results\\\u201cRun3\u201d\\ShooterBrain.onnx",
+            "reward": -0.03980952611946989,
+            "creation_time": 1777121299.975446,
+            "auxillary_file_paths": [
+                "results\\\u201cRun3\u201d\\ShooterBrain\\ShooterBrain-1008785.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
