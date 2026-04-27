@@ -6,13 +6,13 @@ behaviors:
     summary_freq: 25000      
 
     hyperparameters:
-      learning_rate: 1.0e-4  # Slightly lower — more stable for sparse rewards
-      batch_size: 512        # Reduced: your episodes are SHORT (one shot then wait)
+      learning_rate: 1.0e-4  
+      batch_size: 512        
       buffer_size: 5120      # Keep 10x ratio with batch_size
-      beta: 5.0e-3            # HIGHER entropy bonus — forces exploration of pitch/yaw/force combos
-      epsilon: 0.15           # Tighter clipping — prevents policy from lurching on sparse reward
-      lambd: 0.90             # LOWER — short episodes need less lookahead for advantage estimation
-      num_epoch: 4            # One extra pass per buffer — helps with small obs space
+      beta: 5.0e-3            
+      epsilon: 0.15           
+      lambd: 0.90             
+      num_epoch: 4            
       learning_rate_schedule: linear
 
     network_settings:

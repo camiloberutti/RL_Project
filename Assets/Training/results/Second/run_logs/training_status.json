@@ -2,58 +2,58 @@
     "ShooterBrain": {
         "checkpoints": [
             {
-                "steps": 6499985,
-                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-6499985.onnx",
-                "reward": 0.15117742328514014,
-                "creation_time": 1777150198.9124987,
+                "steps": 12499974,
+                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-12499974.onnx",
+                "reward": -0.0010000000474974513,
+                "creation_time": 1777288215.8501382,
                 "auxillary_file_paths": [
-                    "results\\Second\\ShooterBrain\\ShooterBrain-6499985.pt"
+                    "results\\Second\\ShooterBrain\\ShooterBrain-12499974.pt"
                 ]
             },
             {
-                "steps": 6999998,
-                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-6999998.onnx",
-                "reward": 0.16563366442148822,
-                "creation_time": 1777151020.5160758,
+                "steps": 12999968,
+                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-12999968.onnx",
+                "reward": 0.19833333094914754,
+                "creation_time": 1777289054.410337,
                 "auxillary_file_paths": [
-                    "results\\Second\\ShooterBrain\\ShooterBrain-6999998.pt"
+                    "results\\Second\\ShooterBrain\\ShooterBrain-12999968.pt"
                 ]
             },
             {
-                "steps": 7499998,
-                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-7499998.onnx",
-                "reward": 0.1391006717849023,
-                "creation_time": 1777151847.7692165,
+                "steps": 13499972,
+                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-13499972.onnx",
+                "reward": 0.17416304491495754,
+                "creation_time": 1777289901.9020393,
                 "auxillary_file_paths": [
-                    "results\\Second\\ShooterBrain\\ShooterBrain-7499998.pt"
+                    "results\\Second\\ShooterBrain\\ShooterBrain-13499972.pt"
                 ]
             },
             {
-                "steps": 7999975,
-                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-7999975.onnx",
-                "reward": 0.1877096774950323,
-                "creation_time": 1777152680.5099063,
+                "steps": 13999975,
+                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-13999975.onnx",
+                "reward": 0.1285769224793722,
+                "creation_time": 1777290758.5367773,
                 "auxillary_file_paths": [
-                    "results\\Second\\ShooterBrain\\ShooterBrain-7999975.pt"
+                    "results\\Second\\ShooterBrain\\ShooterBrain-13999975.pt"
                 ]
             },
             {
-                "steps": 8041074,
-                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-8041074.onnx",
-                "reward": 0.12722580725582497,
-                "creation_time": 1777152758.5095465,
+                "steps": 14019302,
+                "file_path": "results\\Second\\ShooterBrain\\ShooterBrain-14019302.onnx",
+                "reward": 0.12796739245886388,
+                "creation_time": 1777290790.7440922,
                 "auxillary_file_paths": [
-                    "results\\Second\\ShooterBrain\\ShooterBrain-8041074.pt"
+                    "results\\Second\\ShooterBrain\\ShooterBrain-14019302.pt"
                 ]
             }
         ],
         "final_checkpoint": {
-            "steps": 8041074,
+            "steps": 14019302,
             "file_path": "results\\Second\\ShooterBrain.onnx",
-            "reward": 0.12722580725582497,
-            "creation_time": 1777152758.5095465,
+            "reward": 0.12796739245886388,
+            "creation_time": 1777290790.7440922,
             "auxillary_file_paths": [
-                "results\\Second\\ShooterBrain\\ShooterBrain-8041074.pt"
+                "results\\Second\\ShooterBrain\\ShooterBrain-14019302.pt"
             ]
         }
     },

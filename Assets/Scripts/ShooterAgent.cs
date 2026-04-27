@@ -7,9 +7,9 @@ public class ShooterAgent : Agent
 {
     [Header("Prefabs and Environment")]
     public GameObject birdPrefab;
-    [Tooltip("The master container that moves the table and pyramid together.")]
+    [Tooltip("Container that moves the table and pyramid")]
     public Transform targetZone;
-    [Tooltip("The parent object that contains all the targets (pigs/cans).")]
+    [Tooltip("The parent object that contains all the targets")]
     public Transform pyramidParent;
 
     [Header("Cannon Components")]
@@ -20,7 +20,7 @@ public class ShooterAgent : Agent
     [Header("Shooting Physics")]
     public float maxForce = 30f;
     public float rotationSpeed = 200f;
-    [Tooltip("Time the AI waits to see the result of its shot before resetting.")]
+    [Tooltip("Time to wait to see the result of its shot before resetting.")]
     public float timeToWaitAfterShot = 3.0f;
 
     [Header("Rotation Limits")]
@@ -43,16 +43,13 @@ public class ShooterAgent : Agent
     private GameObject currentBird;
     private float humanPower = 0.5f;
 
-    // --- Pyramid Memory Cache ---
     private Transform[] cans;
     private Vector3[] startPositions;
     private Quaternion[] startRotations;
     private Rigidbody[] canRigidbodies;
 
 
-    // ==========================================
-    // 1. INITIALIZATION (Executed only once)
-    // ==========================================
+
     public override void Initialize()
     {
         int canCount = pyramidParent.childCount;
@@ -71,9 +68,7 @@ public class ShooterAgent : Agent
     }
 
 
-    // ==========================================
-    // 2. EPISODE RESET
-    // ==========================================
+
     public override void OnEpisodeBegin()
     {
         // Clean up the previous projectile
@@ -126,27 +121,19 @@ public class ShooterAgent : Agent
     }
 
 
-    // ==========================================
-    // 3. OBSERVATIONS
-    // ==========================================
     public override void CollectObservations(VectorSensor sensor)
     {
         // Cannon orientation (normalized)
         sensor.AddObservation(currentYaw / maxYaw);         // [-1, 1]
         sensor.AddObservation(currentPitch / maxPitch);     // [-1, 1]
 
-        // Target relative position — gives the agent persistent spatial awareness
+        // Target relative position 
         Vector3 toTarget = targetZone.position - launchPoint.position;
-        sensor.AddObservation(toTarget.normalized);         // 3 floats: direction
-        sensor.AddObservation(toTarget.magnitude / 70f);    // 1 float: normalized distance
-
-        // Total: 6 observations — set Vector Observations > Space Size to 6 in Inspector
+        sensor.AddObservation(toTarget.normalized);        
+        sensor.AddObservation(toTarget.magnitude / 70f);   
     }
 
 
-    // ==========================================
-    // 4. ACTIONS
-    // ==========================================
     public override void OnActionReceived(ActionBuffers actions)
     {
         if (hasFired) return;
@@ -202,9 +189,6 @@ public class ShooterAgent : Agent
     }
 
 
-    // ==========================================
-    // 5. MANUAL CONTROLS (Testing / Heuristic)
-    // ==========================================
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var continuousActions = actionsOut.ContinuousActions;
@@ -228,9 +212,7 @@ public class ShooterAgent : Agent
     }
 
 
-    // ==========================================
-    // 6. EDITOR GIZMOS
-    // ==========================================
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

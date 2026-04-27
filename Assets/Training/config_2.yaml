@@ -9,7 +9,7 @@ behaviors:
       learning_rate: 1.0e-4
       batch_size: 512        #
       buffer_size: 5120      # Keep 10x ratio with batch_size
-      beta: 5.0e-3            # HIGHER entropy bonus — forces exploration of pitch/yaw/force combos
+      beta: 5.0e-3           
       epsilon: 0.15
       lambd: 0.90
       num_epoch: 4           

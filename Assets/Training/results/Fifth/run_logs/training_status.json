@@ -1,0 +1,65 @@
+{
+    "ShooterBrain": {
+        "checkpoints": [
+            {
+                "steps": 7499989,
+                "file_path": "results\\Fifth\\ShooterBrain\\ShooterBrain-7499989.onnx",
+                "reward": -0.0010000000474974513,
+                "creation_time": 1777303444.7908425,
+                "auxillary_file_paths": [
+                    "results\\Fifth\\ShooterBrain\\ShooterBrain-7499989.pt"
+                ]
+            },
+            {
+                "steps": 7999979,
+                "file_path": "results\\Fifth\\ShooterBrain\\ShooterBrain-7999979.onnx",
+                "reward": 0.17035593339922775,
+                "creation_time": 1777304294.6373622,
+                "auxillary_file_paths": [
+                    "results\\Fifth\\ShooterBrain\\ShooterBrain-7999979.pt"
+                ]
+            },
+            {
+                "steps": 8499992,
+                "file_path": "results\\Fifth\\ShooterBrain\\ShooterBrain-8499992.onnx",
+                "reward": 0.19320529871018888,
+                "creation_time": 1777305152.3925192,
+                "auxillary_file_paths": [
+                    "results\\Fifth\\ShooterBrain\\ShooterBrain-8499992.pt"
+                ]
+            },
+            {
+                "steps": 8999989,
+                "file_path": "results\\Fifth\\ShooterBrain\\ShooterBrain-8999989.onnx",
+                "reward": 0.158318184561336,
+                "creation_time": 1777306005.414106,
+                "auxillary_file_paths": [
+                    "results\\Fifth\\ShooterBrain\\ShooterBrain-8999989.pt"
+                ]
+            },
+            {
+                "steps": 9002858,
+                "file_path": "results\\Fifth\\ShooterBrain\\ShooterBrain-9002858.onnx",
+                "reward": 0.16387179680392505,
+                "creation_time": 1777306009.5874395,
+                "auxillary_file_paths": [
+                    "results\\Fifth\\ShooterBrain\\ShooterBrain-9002858.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 9002858,
+            "file_path": "results\\Fifth\\ShooterBrain.onnx",
+            "reward": 0.16387179680392505,
+            "creation_time": 1777306009.5874395,
+            "auxillary_file_paths": [
+                "results\\Fifth\\ShooterBrain\\ShooterBrain-9002858.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.28.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}

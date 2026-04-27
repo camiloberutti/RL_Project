@@ -8,7 +8,7 @@ public class RewardTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        // --- A pig/can fell into the trigger zone ---
+        // --- A pig fell into the trigger zone
         if (other.CompareTag("Target"))
         {
             myAgent.AddReward(0.2f);
@@ -25,7 +25,7 @@ public class RewardTrigger : MonoBehaviour
             }
         }
 
-        // --- The bird itself hit the floor (clean miss) ---
+        // --- The bird itself hit the floor 
         if (other.CompareTag("Bird"))
         {
             myAgent.AddReward(-0.3f);  // Penalize missing entirely
@@ -33,7 +33,7 @@ public class RewardTrigger : MonoBehaviour
         }
     }
 
-    // Called by ShooterAgent on each episode reset
+    
     public void ResetTrigger()
     {
         cansFallen = 0;
