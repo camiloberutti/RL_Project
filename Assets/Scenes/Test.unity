@@ -316,18 +316,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4045095539230851542, guid: 6a9c83f83b88d09499b0fc583098cee9, type: 3}
-      propertyPath: m_Model
-      value: 
-      objectReference: {fileID: 5022602860645237092, guid: b736c4b4bb8284b41a270dd88e8e45db, type: 3}
-    - target: {fileID: 4564336589998585150, guid: 6a9c83f83b88d09499b0fc583098cee9, type: 3}
-      propertyPath: maxYaw
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4564336589998585150, guid: 6a9c83f83b88d09499b0fc583098cee9, type: 3}
-      propertyPath: minPitch
-      value: -50
-      objectReference: {fileID: 0}
     - target: {fileID: 4809876125498507183, guid: 6a9c83f83b88d09499b0fc583098cee9, type: 3}
       propertyPath: m_Name
       value: Env
